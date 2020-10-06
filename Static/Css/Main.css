@@ -2173,6 +2173,9 @@ bilibili>iframe {
 	color: #ff7e7e;
 }
 
-.DarkMode .duta th, .DarkMode .duta td {
+.DarkMode .duta th, .DarkMode {
 	border: 1px solid #909090;
 }
+
+.duta td {
+	background-color: #1f1b24;
