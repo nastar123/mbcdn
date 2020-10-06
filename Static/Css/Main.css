@@ -1997,7 +1997,7 @@ code[hljs-codeblock-inner] {
 	font-size: 16px;
 	border-radius: 100px;
 	padding: 22px 20px;
-	border-radius: 8px;
+	border-radius: 0px;
 	box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 20px;
 	margin-top: 15px !important;
 	margin-bottom: 15px !important;
