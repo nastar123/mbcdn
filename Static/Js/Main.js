@@ -488,7 +488,7 @@ function AjaxComment() {
 				$("#comment-submit-button").attr("disabled", "disabled").text('提交中……');
 			},
 			error: function () {
-				iziToast.error({ title: '评论失败', message: '参数提交错误，请刷新后重试', position: 'topRight', })
+				iziToast.error({ title: '评论失败', message: '请勿发广告、漫骂及其他非法言论，请刷新后重试', position: 'topRight', })
 				$("#comment-submit-button").removeClass('lv').addClass('hong').text('提交失败');
 				return false;
 			},
