@@ -144,7 +144,7 @@ var CuteenFunc = {
 					var startTime = new Date(); debugger;
 					if (new Date() - startTime > timeLimit) {
 						if (!open) { callbacks.forEach(function (fn) { fn.call(null); }); }
-						open = true; window.stop(); alert('大佬别再扒了！赶紧买一份吧ヽ(￣ω￣(￣ω￣〃)ゝ'); document.body.innerHTML = "";
+						open = true; window.stop(); alert('大佬别再扒了！主题是Cuteen买它ヽ(￣ω￣(￣ω￣〃)ゝ'); document.body.innerHTML = "";
 					} else {
 						open = false;
 					}
