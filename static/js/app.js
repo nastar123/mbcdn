@@ -1,5 +1,5 @@
 "use strict";
-
+console.log(' %c Theme Cuteen v4.8(20210911) %c https://blog.zwying.com/ ', 'color: #fff; background: #2dce89; padding:5px;', 'background: #1c2b36; padding:5px;');
 //----------------------------------------添加、删除Class---------------------------------------
 function hasClass(obj, cls) {
     return obj.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
@@ -23,7 +23,6 @@ function toggleClass(obj, cls) {
         addClass(obj, cls);
     }
 }
-
 
 const Cuteen = {
     initTheme: function () {
@@ -70,7 +69,8 @@ const Cuteen = {
         attr.onclick = function () {
             let status = side.getAttribute('mobile-open');
             if (status === 'false') {
-                side.setAttribute('mobile-open', 'true')
+                side.setAttribute('mobile-open', 'true');
+                
             } else {
                 side.setAttribute('mobile-open', 'false')
             }
@@ -79,8 +79,7 @@ const Cuteen = {
     mobileMusicToggle: function () {
         const musicPop = document.getElementById('mobileMusic');
         const box = document.getElementById('musicMobileBox');
-        console.log(musicPop)
-        if (musicPop !== null){
+        if (musicPop !== null) {
             musicPop.onclick = function () {
                 if (box.className === 'on') {
                     box.classList.remove('on');
@@ -134,7 +133,7 @@ const Cuteen = {
         }
     },
     backTop: function () {
-        window.scroll({top: 0, left: 0, behavior: 'smooth'});
+        window.scroll({ top: 0, left: 0, behavior: 'smooth' });
     },
     randomString: function (len) {
         len = len || 32;
@@ -169,7 +168,7 @@ const Cuteen = {
         });
         document.querySelectorAll('code.hljs').forEach((block) => {
             let copyBtnID = "copy_btn_" + Cuteen.randomString();
-            hljs.lineNumbersBlock(block, {singleLine: true});
+            hljs.lineNumbersBlock(block, { singleLine: true });
             const el = block.parentNode;
             el.classList.add('hljs-codeblock');
             block.insertAdjacentHTML('afterend', `
@@ -209,7 +208,6 @@ const Cuteen = {
     ajaxComment: function () {
         const fm = document.getElementById('comment-form');
         const action = fm.getAttribute('data-action');
-        console.log(action);
         fm.onsubmit = function (e) {
             e.preventDefault();
             let fmData = new FormData(fm);
@@ -218,6 +216,8 @@ const Cuteen = {
                     const parser = new DOMParser();
                     const convert = parser.parseFromString(response.data, "text/html");//字符串转换为dom
                     const error = new RegExp('Typecho_Widget_Exception');
+                    const check = new RegExp('对不起');
+                    const nick = new RegExp('已经被注册');
                     if (error.test(response.data)) {
                         Toastify({
                             duration: 3000,
@@ -227,8 +227,29 @@ const Cuteen = {
                             className: "info",
                         }).showToast();
                         console.log(response.data);
-                    } else {
-                        console.log('回复提交成功！');
+                    }
+                    else if (check.test(response.data)) {
+                        Toastify({
+                            duration: 5000,
+                            position: 'center',
+                            text: '<svg class="icon icon-20" aria-hidden="true"><use xlink:href="#alert-circle"></use></svg>您有评论正在审核!暂时不能评论',
+                            backgroundColor: "var(--bs-info)",
+                            className: "info",
+                        }).showToast();
+                        console.log(response.data);
+                    }
+                    else if (nick.test(response.data)) {
+                        Toastify({
+                            duration: 5000,
+                            position: 'center',
+                            text: '<svg class="icon icon-20" aria-hidden="true"><use xlink:href="#x-circle"></use></svg>昵称不能和站长一致!',
+                            backgroundColor: "var(--bs-danger)",
+                            className: "info",
+                        }).showToast();
+                        console.log(response.data);
+                    }
+                    else {
+                        //console.log('回复提交成功！');
                         document.getElementById("comment-textarea").value = "";//清空回复
                         window.TypechoComment.cancelReply();//复位回复框
                         const newIdNumber = response.data.match(/id=\"?comment-\d+/g).join().match(/\d+/g).sort(
@@ -239,7 +260,7 @@ const Cuteen = {
                         const newId = 'comment-'.concat(newIdNumber);
                         const oldList = document.getElementsByClassName('comment-list');
                         const newList = convert.getElementsByClassName('comment-list')[0].outerHTML;//获取新列表
-                        console.log(oldList)
+                        //console.log(oldList)
                         if (oldList.length > 0) {
                             oldList[0].remove();//移除旧列表
                         }
@@ -251,7 +272,7 @@ const Cuteen = {
                             backgroundColor: "var(--bs-success)",
                             className: "info",
                         }).showToast();//提示成功
-                        document.getElementById(newId).scrollIntoView({behavior: "smooth"});//滚动到对应锚点
+                        document.getElementById(newId).scrollIntoView({ behavior: "smooth" });//滚动到对应锚点
                     }
                 })
                 .catch(function (error) {
@@ -290,7 +311,7 @@ const Cuteen = {
                     .then(function (response) {
                         like.classList.remove('btn-outline-primary');
                         like.classList.add('btn-primary');
-                        Cookies.set('upstar', dataID, {expires: 7});
+                        Cookies.set('upstar', dataID, { expires: 7 });
                         num.innerText++;
                         Toastify({
                             duration: 3000,
@@ -372,7 +393,9 @@ const Cuteen = {
                     } else {
                         const list = convert.getElementsByClassName('article');//获取新列表
                         const newHrefPosition = convert.getElementsByClassName('next')[0];
-                        const newhref = newHrefPosition.getAttribute('href');
+                        if (newHrefPosition !== undefined) {
+                            var newhref = newHrefPosition.getAttribute('href');
+                        }
                         let b = '';
                         for (let v of list) {
                             b += v.outerHTML;
@@ -388,11 +411,11 @@ const Cuteen = {
                         } else {
                             insertPosition.insertAdjacentHTML('beforeend', b);//插入新列表列表模式
                         }
-                        link.insertAdjacentHTML('beforeend', '<button id="NextButton" onclick="Cuteen.ajaxNext()" class="btn btn-primary col-3 mx-auto rounded-pill">点击加载更多</button>')
-                        link.setAttribute('href', newhref);
-                        let lazy = new LazyLoad({
-                            // Your custom settings go here
-                        });
+                        if (newHrefPosition !== undefined) {
+                            link.insertAdjacentHTML('beforeend', '<button id="NextButton" onclick="Cuteen.ajaxNext()" class="btn btn-primary col-3 mx-auto rounded-pill">点击加载更多</button>')
+                            link.setAttribute('href', newhref);
+                        }
+                        let lazy = new LazyLoad();
                         lazy.update();
                         return false;
                     }
@@ -481,36 +504,35 @@ const Cuteen = {
         const svg = document.querySelector('#darkMode use');
         const svg2 = document.querySelector('#mobileDarkMode use');
         const icon = svg.getAttribute('xlink:href');
-        const hb = '<div class="Cuteen_DarkSky">\n' +
-            '  <div class="Cuteen_DarkPlanet">\n' +
-            '  </div>\n' +
-            '</div>';
+
+        const hb = '<div id="sky"><div class="planet"><div class="sun"></div><div class="moon"></div></div></div>';
         btn.insertAdjacentHTML('beforeend', hb);
-        toggleClass(btn, 'dark-mode');
-        const sky = document.getElementsByClassName('Cuteen_DarkSky')[0];
+
+        const sky = document.getElementById('sky');
         if (sky !== undefined) {
             const DarkMode = Cookies.get('DarkMode');
             if (DarkMode === '0') {
-                Cookies.set('DarkMode', 1, {expires: 3});
+                Cookies.set('DarkMode', 1, { expires: 3 });
                 console.log('夜间模式关闭');
+
             } else {
-                Cookies.set('DarkMode', 0, {expires: 3});
-                console.log('夜间模式开启')
+                Cookies.set('DarkMode', 0, { expires: 3 });
+                console.log('夜间模式开启');
             }
             setTimeout(function () {
-                if (sky.style.opacity !== 0) {
-                    var num = 10;
-                    var st = setInterval(function () {
-                        num--;
-                        sky.style.opacity = num / 10;
-                        if (num <= 0) {
-                            clearInterval(st);
-                            sky.remove();
-                        }
-                    }, 30);
-                }
-            }, 2e3)
-
+                toggleClass(btn, 'dark-mode');
+            }, 1e3)
+            setTimeout(function () {
+                var num = 10;
+                var st = setInterval(function () {
+                    num--;
+                    sky.style.opacity = num / 10;
+                    if (num <= 0) {
+                        clearInterval(st);
+                        sky.remove();
+                    }
+                }, 30);
+            }, 2800)
         }
         if (icon === '#moon') {
             svg.setAttribute('xlink:href', '#sun');
@@ -593,7 +615,7 @@ const Cuteen = {
                 document.documentElement.style.setProperty('--bs-primary_opacity_7', 'rgba(13, 110, 253, 0.7)');
                 document.documentElement.style.setProperty('--bs-primary_opacity_8', 'rgba(13, 110, 253, 0.8)');
                 document.documentElement.style.setProperty('--bs-primary_opacity_9', 'rgba(13, 110, 253, 0.9)');
-                Cookies.set('themeColor', 'primary', {expires: 3});
+                Cookies.set('themeColor', 'primary', { expires: 3 });
                 break;
             case 'danger':
                 document.documentElement.style.setProperty('--bs-primary', '#dc3545');
@@ -606,7 +628,7 @@ const Cuteen = {
                 document.documentElement.style.setProperty('--bs-primary_opacity_7', 'rgba(220, 53, 69, 0.7)');
                 document.documentElement.style.setProperty('--bs-primary_opacity_8', 'rgba(220, 53, 69, 0.8)');
                 document.documentElement.style.setProperty('--bs-primary_opacity_9', 'rgba(220, 53, 69, 0.9)');
-                Cookies.set('themeColor', 'danger', {expires: 3});
+                Cookies.set('themeColor', 'danger', { expires: 3 });
                 break;
             case 'info':
                 document.documentElement.style.setProperty('--bs-primary', '#17a2b8');
@@ -619,7 +641,7 @@ const Cuteen = {
                 document.documentElement.style.setProperty('--bs-primary_opacity_7', 'rgba(23, 162, 184, 0.7)');
                 document.documentElement.style.setProperty('--bs-primary_opacity_8', 'rgba(23, 162, 184, 0.8)');
                 document.documentElement.style.setProperty('--bs-primary_opacity_9', 'rgba(23, 162, 184, 0.9)');
-                Cookies.set('themeColor', 'info', {expires: 3});
+                Cookies.set('themeColor', 'info', { expires: 3 });
                 break;
             case 'success':
                 document.documentElement.style.setProperty('--bs-primary', '#28a745');
@@ -632,7 +654,7 @@ const Cuteen = {
                 document.documentElement.style.setProperty('--bs-primary_opacity_7', 'rgba(40, 167, 69, 0.7)');
                 document.documentElement.style.setProperty('--bs-primary_opacity_8', 'rgba(40, 167, 69, 0.8)');
                 document.documentElement.style.setProperty('--bs-primary_opacity_9', 'rgba(40, 167, 69, 0.9)');
-                Cookies.set('themeColor', 'success', {expires: 3});
+                Cookies.set('themeColor', 'success', { expires: 3 });
                 break;
             case 'warning':
                 document.documentElement.style.setProperty('--bs-primary', '#ffc107');
@@ -645,7 +667,7 @@ const Cuteen = {
                 document.documentElement.style.setProperty('--bs-primary_opacity_7', 'rgba(255, 193, 7, 0.7)');
                 document.documentElement.style.setProperty('--bs-primary_opacity_8', 'rgba(255, 193, 7, 0.8)');
                 document.documentElement.style.setProperty('--bs-primary_opacity_9', 'rgba(255, 193, 7, 0.9)');
-                Cookies.set('themeColor', 'warning', {expires: 3});
+                Cookies.set('themeColor', 'warning', { expires: 3 });
                 break;
             default:
 
@@ -653,7 +675,6 @@ const Cuteen = {
     },
     themeColorCheck: function () {
         const themeColor = Cookies.get('themeColor');
-        console.log(themeColor)
         if (themeColor === 'primary') {
             this.themeColor('primary');
             document.querySelector('.btn-check[value="primary"]').setAttribute('checked', 'checked');
